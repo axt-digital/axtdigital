@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Demo: generador de textos — A x T Digital</title>
+<style>
+  :root {
+    --color-fondo:#0f1117; --color-superficie:#1a1d27; --color-borde:#2a2d3e;
+    --color-acento:#6c63ff; --color-acento-hover:#8b84ff; --color-texto:#e8e9f0;
+    --color-texto-suave:#9a9bb0; --color-ok:#22c55e; --color-no:#f87171;
+    --fuente-base:'Segoe UI', system-ui, -apple-system, sans-serif; --radio:12px;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--color-fondo);color:var(--color-texto);font-family:var(--fuente-base);line-height:1.6;}
+  .contenedor{width:min(92%,900px);margin-inline:auto;}
+  .nav{position:sticky;top:0;z-index:100;background:rgba(15,17,23,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--color-borde);padding:1rem 0;}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;width:min(92%,900px);margin-inline:auto;}
+  .nav-logo{font-size:1.1rem;font-weight:700;color:var(--color-acento);text-decoration:none;letter-spacing:-.5px;}
+  .nav-volver{font-size:.85rem;font-weight:600;color:var(--color-texto-suave);text-decoration:none;border:1px solid var(--color-borde);padding:.4rem 1rem;border-radius:99px;transition:border-color .2s,color .2s;}
+  .nav-volver:hover{color:var(--color-texto);border-color:var(--color-acento);}
+  main{padding:3rem 0 5rem;}
+  .chip{display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--color-acento);background:rgba(108,99,255,.12);border:1px solid rgba(108,99,255,.3);border-radius:99px;padding:.25rem .85rem;margin-bottom:1.25rem;}
+  h1{font-size:clamp(1.6rem,4vw,2.3rem);font-weight:800;line-height:1.25;letter-spacing:-.5px;margin-bottom:1rem;}
+  .rubro{color:var(--color-texto-suave);margin-bottom:2rem;max-width:62ch;}
+  .rubro b{color:var(--color-texto);}
+  .frase-estado{border-radius:var(--radio);padding:1rem 1.25rem;font-size:.95rem;font-weight:600;margin-bottom:1.5rem;display:flex;align-items:center;gap:.6rem;transition:opacity .3s;}
+  .frase-antes{background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.3);color:#ffb4b4;}
+  .frase-despues{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);color:#a7f3c9;opacity:.35;}
+  .frase-despues.activa{opacity:1;}
+  .tabs{display:flex;gap:.6rem;margin-bottom:1.25rem;flex-wrap:wrap;}
+  .tab{background:var(--color-superficie);border:1px solid var(--color-borde);color:var(--color-texto-suave);font-size:.85rem;font-weight:700;padding:.6rem 1.1rem;border-radius:99px;cursor:pointer;transition:border-color .2s,color .2s;}
+  .tab:hover{color:var(--color-texto);}
+  .tab.activo{border-color:var(--color-acento);background:rgba(108,99,255,.12);color:var(--color-acento);}
+  .panel{background:var(--color-superficie);border:1px solid var(--color-borde);border-radius:var(--radio);padding:1.5rem;}
+  .panel-titulo{font-size:.78rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--color-ok);margin-bottom:1rem;}
+  .texto-generado{background:var(--color-fondo);border:1px solid var(--color-borde);border-radius:10px;padding:1rem;font-size:.9rem;white-space:pre-line;min-height:90px;}
+  .fila{display:flex;gap:.75rem;margin-top:1rem;}
+  .btn-primario{display:inline-block;background:var(--color-acento);color:#fff;font-weight:700;font-size:.9rem;text-decoration:none;padding:.7rem 1.4rem;border-radius:99px;border:none;cursor:pointer;transition:background .2s;}
+  .btn-primario:hover{background:var(--color-acento-hover);}
+  .cierre{margin-top:2.5rem;text-align:center;padding-top:2.5rem;border-top:1px solid var(--color-borde);}
+  .cierre p{color:var(--color-texto-suave);margin-bottom:1.25rem;}
+  .cierre .btn-primario{padding:.9rem 2rem;font-size:1rem;box-shadow:0 4px 20px rgba(108,99,255,.35);}
+  #copiado{font-size:.78rem;color:var(--color-ok);margin-top:.6rem;height:1em;}
+</style>
+</head>
+<body>
+  <nav class="nav"><div class="nav-inner">
+    <a href="index.html#heroe" class="nav-logo">A x T Digital</a>
+    <a href="index.html#ejemplos" class="nav-volver">← Volver al sitio</a>
+  </div></nav>
+
+  <main><div class="contenedor">
+    <span class="chip">Demo interactiva</span>
+    <h1>Generador de textos: en el tono de tu negocio, listos en segundos</h1>
+    <p class="rubro">Ejemplo armado con datos de <b>una boutique</b> — la misma idea sirve para cualquier negocio que necesite escribir seguido y no siempre tenga tiempo o ganas.</p>
+
+    <div class="frase-estado frase-antes">✗ Antes: escribir un posteo o un mail lleva tiempo, y a veces el negocio se queda varios días sin publicar nada.</div>
+
+    <div class="tabs">
+      <button class="tab activo" data-tipo="story">📱 Story de Instagram</button>
+      <button class="tab" data-tipo="descripcion">🏷️ Descripción de producto</button>
+      <button class="tab" data-tipo="mail">✉️ Mail a un cliente</button>
+    </div>
+
+    <div class="panel">
+      <div class="panel-titulo" id="panelTitulo">✓ Story de Instagram</div>
+      <div class="texto-generado" id="texto"></div>
+      <div class="fila">
+        <button class="btn-primario" onclick="copiar()">Copiar texto 📋</button>
+      </div>
+      <p id="copiado"></p>
+    </div>
+
+    <div class="frase-estado frase-despues activa" style="margin-top:1.5rem;">✓ Después: elegís el formato, tenés el texto listo en el tono del negocio, y solo falta publicarlo.</div>
+
+    <div class="cierre">
+      <p>¿Lo ves claro?</p>
+      <a href="index.html#agenda" class="btn-primario">Agendá 20 minutos y te armo la versión para tu negocio →</a>
+    </div>
+  </div></main>
+
+<script>
+  var textos = {
+    story: {
+      titulo: "✓ Story de Instagram",
+      texto: "🆕 Llegó lo nuevo de la temporada 🧥\n\nCamperas, jeans y remeras básicas recién llegadas al local.\n\nPasá esta semana o escribinos por acá 💬"
+    },
+    descripcion: {
+      titulo: "✓ Descripción de producto",
+      texto: "Campera de jean clásica, de tela resistente y corte entallado. Ideal para combinar con cualquier look de entretiempo. Talles del S al XL. Consultanos stock y color disponible."
+    },
+    mail: {
+      titulo: "✓ Mail a un cliente",
+      texto: "Hola ¿cómo estás?\n\nTe escribimos para contarte que llegó la nueva colección que habías consultado. Si querés, te reservamos tu talle antes de que se agote.\n\n¡Cualquier cosa, escribinos!\nSaludos."
+    }
+  };
+
+  var actual = "story";
+
+  function mostrar(tipo) {
+    actual = tipo;
+    document.getElementById("panelTitulo").textContent = textos[tipo].titulo;
+    document.getElementById("texto").textContent = textos[tipo].texto;
+    document.getElementById("copiado").textContent = "";
+    document.querySelectorAll(".tab").forEach(function (t) {
+      t.classList.toggle("activo", t.getAttribute("data-tipo") === tipo);
+    });
+  }
+
+  document.querySelectorAll(".tab").forEach(function (tab) {
+    tab.addEventListener("click", function () { mostrar(tab.getAttribute("data-tipo")); });
+  });
+
+  function copiar() {
+    var texto = textos[actual].texto;
+    try {
+      navigator.clipboard.writeText(texto);
+      document.getElementById("copiado").textContent = "✓ Texto copiado, listo para pegar";
+    } catch (e) {
+      document.getElementById("copiado").textContent = "Seleccioná el texto y copialo con Ctrl+C";
+    }
+  }
+
+  mostrar("story");
+</script>
+</body>
+</html>

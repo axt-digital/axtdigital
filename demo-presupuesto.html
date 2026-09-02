@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Demo: presupuestador automático — A x T Digital</title>
+<style>
+  :root {
+    --color-fondo:#0f1117; --color-superficie:#1a1d27; --color-borde:#2a2d3e;
+    --color-acento:#6c63ff; --color-acento-hover:#8b84ff; --color-texto:#e8e9f0;
+    --color-texto-suave:#9a9bb0; --color-ok:#22c55e; --color-no:#f87171;
+    --fuente-base:'Segoe UI', system-ui, -apple-system, sans-serif; --radio:12px;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--color-fondo);color:var(--color-texto);font-family:var(--fuente-base);line-height:1.6;}
+  .contenedor{width:min(92%,900px);margin-inline:auto;}
+  .nav{position:sticky;top:0;z-index:100;background:rgba(15,17,23,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--color-borde);padding:1rem 0;}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;width:min(92%,900px);margin-inline:auto;}
+  .nav-logo{font-size:1.1rem;font-weight:700;color:var(--color-acento);text-decoration:none;letter-spacing:-.5px;}
+  .nav-volver{font-size:.85rem;font-weight:600;color:var(--color-texto-suave);text-decoration:none;border:1px solid var(--color-borde);padding:.4rem 1rem;border-radius:99px;transition:border-color .2s,color .2s;}
+  .nav-volver:hover{color:var(--color-texto);border-color:var(--color-acento);}
+  main{padding:3rem 0 5rem;}
+  .chip{display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--color-acento);background:rgba(108,99,255,.12);border:1px solid rgba(108,99,255,.3);border-radius:99px;padding:.25rem .85rem;margin-bottom:1.25rem;}
+  h1{font-size:clamp(1.6rem,4vw,2.3rem);font-weight:800;line-height:1.25;letter-spacing:-.5px;margin-bottom:1rem;}
+  .rubro{color:var(--color-texto-suave);margin-bottom:2rem;max-width:62ch;}
+  .rubro b{color:var(--color-texto);}
+  .frase-estado{border-radius:var(--radio);padding:1rem 1.25rem;font-size:.95rem;font-weight:600;margin-bottom:1.5rem;display:flex;align-items:center;gap:.6rem;transition:opacity .3s;}
+  .frase-antes{background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.3);color:#ffb4b4;}
+  .frase-despues{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);color:#a7f3c9;opacity:.35;}
+  .frase-despues.activa{opacity:1;}
+  .panel{background:var(--color-superficie);border:1px solid var(--color-borde);border-radius:var(--radio);padding:1.5rem;margin-bottom:1.5rem;}
+  .campo{margin-bottom:1.1rem;}
+  .campo label{display:block;font-size:.78rem;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:var(--color-texto-suave);margin-bottom:.4rem;}
+  .campo select, .campo input{width:100%;background:var(--color-fondo);border:1px solid var(--color-borde);border-radius:8px;color:var(--color-texto);padding:.65rem .8rem;font-size:.92rem;font-family:inherit;}
+  .campo select:focus, .campo input:focus{outline:none;border-color:var(--color-acento);}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+  @media(max-width:540px){.grid2{grid-template-columns:1fr;}}
+  .btn-primario{display:inline-block;background:var(--color-acento);color:#fff;font-weight:700;font-size:1rem;text-decoration:none;padding:.9rem 2rem;border-radius:99px;border:none;cursor:pointer;transition:background .2s,transform .15s;box-shadow:0 4px 20px rgba(108,99,255,.35);}
+  .btn-primario:hover{background:var(--color-acento-hover);transform:translateY(-2px);}
+  .resultado{margin-top:1.5rem;border-top:1px dashed var(--color-borde);padding-top:1.25rem;display:none;}
+  .resultado.mostrar{display:block;animation:aparecer .4s ease;}
+  @keyframes aparecer{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:translateY(0);}}
+  .linea{display:flex;justify-content:space-between;font-size:.9rem;color:var(--color-texto-suave);padding:.4rem 0;}
+  .linea.total{color:var(--color-texto);font-weight:800;font-size:1.15rem;border-top:1px solid var(--color-borde);margin-top:.5rem;padding-top:.75rem;}
+  .linea.total span:last-child{color:var(--color-acento);}
+  .sello{font-size:.75rem;color:var(--color-ok);margin-top:.75rem;}
+  .cierre{margin-top:2.5rem;text-align:center;padding-top:2.5rem;border-top:1px solid var(--color-borde);}
+  .cierre p{color:var(--color-texto-suave);margin-bottom:1.25rem;}
+</style>
+</head>
+<body>
+  <nav class="nav"><div class="nav-inner">
+    <a href="index.html#heroe" class="nav-logo">A x T Digital</a>
+    <a href="index.html#ejemplos" class="nav-volver">← Volver al sitio</a>
+  </div></nav>
+
+  <main><div class="contenedor">
+    <span class="chip">Demo interactiva</span>
+    <h1>Presupuestador automático: 4 datos y el cliente recibe un precio al instante</h1>
+    <p class="rubro">Ejemplo armado con datos de <b>un taller mecánico</b> — la misma lógica se adapta a cualquier servicio que hoy cotice por teléfono o WhatsApp.</p>
+
+    <div class="frase-estado frase-antes">✗ Antes: para saber cuánto sale un service, el cliente tiene que llamar, esperar a que lo atiendan, y a veces nunca le contestan.</div>
+
+    <div class="panel">
+      <div class="grid2">
+        <div class="campo">
+          <label>Servicio</label>
+          <select id="servicio">
+            <option value="18000">Cambio de aceite y filtro</option>
+            <option value="35000">Service de frenos</option>
+            <option value="22000">Alineación y balanceo</option>
+            <option value="15000">Diagnóstico general</option>
+          </select>
+        </div>
+        <div class="campo">
+          <label>Cantidad de vehículos</label>
+          <input type="number" id="cantidad" min="1" value="1">
+        </div>
+        <div class="campo">
+          <label>Urgencia</label>
+          <select id="urgencia">
+            <option value="0">Normal (turno esta semana)</option>
+            <option value="8000">Urgente (mismo día)</option>
+          </select>
+        </div>
+        <div class="campo">
+          <label>Zona</label>
+          <select id="zona">
+            <option value="0">Retiro en el taller</option>
+            <option value="3000">Envío zona centro</option>
+            <option value="5000">Envío zona norte / sur</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn-primario" onclick="calcular()" style="margin-top:.5rem;">Calcular presupuesto ⚡</button>
+
+      <div class="resultado" id="resultado">
+        <div class="linea"><span id="lServicioTxt">Servicio</span><span id="lServicio">$0</span></div>
+        <div class="linea"><span>Recargo por urgencia</span><span id="lUrgencia">$0</span></div>
+        <div class="linea"><span>Traslado / envío</span><span id="lZona">$0</span></div>
+        <div class="linea total"><span>Total estimado</span><span id="lTotal">$0</span></div>
+        <div class="sello">✓ Generado automáticamente en segundos, sin llamar a nadie</div>
+      </div>
+    </div>
+
+    <div class="frase-estado frase-despues" id="fraseDespues">✓ Después: el presupuesto sale solo, al instante, las 24 horas — vos solo confirmás el turno cuando el cliente ya decidió.</div>
+
+    <div class="cierre">
+      <p>¿Lo ves claro?</p>
+      <a href="index.html#agenda" class="btn-primario">Agendá 20 minutos y te armo la versión para tu negocio →</a>
+    </div>
+  </div></main>
+
+<script>
+  var nombres = {
+    "18000": "Cambio de aceite y filtro",
+    "35000": "Service de frenos",
+    "22000": "Alineación y balanceo",
+    "15000": "Diagnóstico general"
+  };
+
+  function calcular() {
+    var servicioSel = document.getElementById("servicio");
+    var base = parseInt(servicioSel.value, 10);
+    var cantidad = Math.max(1, parseInt(document.getElementById("cantidad").value, 10) || 1);
+    var urgencia = parseInt(document.getElementById("urgencia").value, 10);
+    var zona = parseInt(document.getElementById("zona").value, 10);
+
+    var subtotalServicio = base * cantidad;
+    var total = subtotalServicio + urgencia + zona;
+
+    document.getElementById("lServicioTxt").textContent = nombres[servicioSel.value] + " x" + cantidad;
+    document.getElementById("lServicio").textContent = "$" + subtotalServicio.toLocaleString("es-AR");
+    document.getElementById("lUrgencia").textContent = "$" + urgencia.toLocaleString("es-AR");
+    document.getElementById("lZona").textContent = "$" + zona.toLocaleString("es-AR");
+    document.getElementById("lTotal").textContent = "$" + total.toLocaleString("es-AR");
+
+    document.getElementById("resultado").classList.add("mostrar");
+    document.getElementById("fraseDespues").classList.add("activa");
+  }
+</script>
+</body>
+</html>

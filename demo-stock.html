@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Demo: control de stock — A x T Digital</title>
+<style>
+  :root {
+    --color-fondo:#0f1117; --color-superficie:#1a1d27; --color-borde:#2a2d3e;
+    --color-acento:#6c63ff; --color-acento-hover:#8b84ff; --color-texto:#e8e9f0;
+    --color-texto-suave:#9a9bb0; --color-ok:#22c55e; --color-no:#f87171;
+    --fuente-base:'Segoe UI', system-ui, -apple-system, sans-serif; --radio:12px;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--color-fondo);color:var(--color-texto);font-family:var(--fuente-base);line-height:1.6;}
+  .contenedor{width:min(92%,900px);margin-inline:auto;}
+  .nav{position:sticky;top:0;z-index:100;background:rgba(15,17,23,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--color-borde);padding:1rem 0;}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;width:min(92%,900px);margin-inline:auto;}
+  .nav-logo{font-size:1.1rem;font-weight:700;color:var(--color-acento);text-decoration:none;letter-spacing:-.5px;}
+  .nav-volver{font-size:.85rem;font-weight:600;color:var(--color-texto-suave);text-decoration:none;border:1px solid var(--color-borde);padding:.4rem 1rem;border-radius:99px;transition:border-color .2s,color .2s;}
+  .nav-volver:hover{color:var(--color-texto);border-color:var(--color-acento);}
+  main{padding:3rem 0 5rem;}
+  .chip{display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--color-acento);background:rgba(108,99,255,.12);border:1px solid rgba(108,99,255,.3);border-radius:99px;padding:.25rem .85rem;margin-bottom:1.25rem;}
+  h1{font-size:clamp(1.6rem,4vw,2.3rem);font-weight:800;line-height:1.25;letter-spacing:-.5px;margin-bottom:1rem;}
+  .rubro{color:var(--color-texto-suave);margin-bottom:2rem;max-width:62ch;}
+  .rubro b{color:var(--color-texto);}
+  .frase-estado{border-radius:var(--radio);padding:1rem 1.25rem;font-size:.95rem;font-weight:600;margin-bottom:1.5rem;display:flex;align-items:center;gap:.6rem;transition:opacity .3s;}
+  .frase-antes{background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.3);color:#ffb4b4;}
+  .frase-despues{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);color:#a7f3c9;opacity:.35;}
+  .frase-despues.activa{opacity:1;}
+  table{width:100%;border-collapse:collapse;background:var(--color-superficie);border:1px solid var(--color-borde);border-radius:var(--radio);overflow:hidden;}
+  th{text-align:left;font-size:.72rem;text-transform:uppercase;letter-spacing:.6px;color:var(--color-texto-suave);padding:.8rem 1rem;border-bottom:1px solid var(--color-borde);}
+  td{padding:.7rem 1rem;font-size:.88rem;border-bottom:1px solid var(--color-borde);}
+  tr:last-child td{border-bottom:none;}
+  tr.bajo td{background:rgba(248,113,113,.08);}
+  .cant{font-weight:800;font-variant-numeric:tabular-nums;}
+  .btn-mini{width:28px;height:28px;border-radius:50%;border:1px solid var(--color-borde);background:var(--color-fondo);color:var(--color-texto);font-weight:800;cursor:pointer;line-height:1;}
+  .btn-mini:hover{border-color:var(--color-acento);color:var(--color-acento);}
+  .badge{font-size:.68rem;font-weight:700;color:var(--color-no);background:rgba(248,113,113,.12);border:1px solid rgba(248,113,113,.3);border-radius:99px;padding:.2rem .6rem;margin-left:.5rem;}
+  .btn-primario{display:inline-block;background:var(--color-acento);color:#fff;font-weight:700;font-size:1rem;text-decoration:none;padding:.9rem 2rem;border-radius:99px;border:none;cursor:pointer;transition:background .2s,transform .15s;box-shadow:0 4px 20px rgba(108,99,255,.35);}
+  .btn-primario:hover{background:var(--color-acento-hover);transform:translateY(-2px);}
+  .cierre{margin-top:2.5rem;text-align:center;padding-top:2.5rem;border-top:1px solid var(--color-borde);}
+  .cierre p{color:var(--color-texto-suave);margin-bottom:1.25rem;}
+</style>
+</head>
+<body>
+  <nav class="nav"><div class="nav-inner">
+    <a href="index.html#heroe" class="nav-logo">A x T Digital</a>
+    <a href="index.html#ejemplos" class="nav-volver">← Volver al sitio</a>
+  </div></nav>
+
+  <main><div class="contenedor">
+    <span class="chip">Demo interactiva</span>
+    <h1>Control de stock con alerta cuando algo se está por terminar</h1>
+    <p class="rubro">Ejemplo armado con datos de <b>un kiosco</b> — funciona igual para una fiambrería o cualquier comercio que necesite saber qué le queda antes de que falte.</p>
+
+    <div class="frase-estado frase-antes">✗ Antes: te enterás que te quedaste sin algo recién cuando un cliente lo pide y no lo tenés.</div>
+
+    <table>
+      <thead><tr><th>Producto</th><th>Stock</th><th></th></tr></thead>
+      <tbody id="cuerpo"></tbody>
+    </table>
+
+    <div class="frase-estado frase-despues" id="fraseDespues" style="margin-top:1.5rem;">✓ Después: el sistema te avisa solo cuando algo está por agotarse, antes de que un cliente se quede sin poder comprarlo.</div>
+
+    <div class="cierre">
+      <p>¿Lo ves claro?</p>
+      <a href="index.html#agenda" class="btn-primario">Agendá 20 minutos y te armo la versión para tu negocio →</a>
+    </div>
+  </div></main>
+
+<script>
+  var productos = [
+    { nombre: "Gaseosa línea x 1.5L", stock: 14, minimo: 5 },
+    { nombre: "Alfajor de chocolate", stock: 22, minimo: 8 },
+    { nombre: "Cigarrillos (paquete)", stock: 6, minimo: 6 },
+    { nombre: "Agua saborizada x 500ml", stock: 9, minimo: 5 },
+    { nombre: "Pilas AA (blister)", stock: 3, minimo: 4 }
+  ];
+
+  var cuerpo = document.getElementById("cuerpo");
+  var fraseDespues = document.getElementById("fraseDespues");
+  var alertaMostrada = false;
+
+  function render() {
+    cuerpo.innerHTML = "";
+    productos.forEach(function (p, i) {
+      var bajo = p.stock <= p.minimo;
+      var tr = document.createElement("tr");
+      if (bajo) tr.className = "bajo";
+      tr.innerHTML =
+        '<td>' + p.nombre + (bajo ? '<span class="badge">⚠ Stock bajo</span>' : '') + '</td>' +
+        '<td class="cant">' + p.stock + '</td>' +
+        '<td>' +
+          '<button class="btn-mini" data-i="' + i + '" data-op="menos">−</button> ' +
+          '<button class="btn-mini" data-i="' + i + '" data-op="mas">+</button>' +
+        '</td>';
+      cuerpo.appendChild(tr);
+      if (bajo && !alertaMostrada) {
+        alertaMostrada = true;
+        fraseDespues.classList.add("activa");
+      }
+    });
+    document.querySelectorAll(".btn-mini").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var i = parseInt(btn.getAttribute("data-i"), 10);
+        var op = btn.getAttribute("data-op");
+        if (op === "mas") productos[i].stock++;
+        else productos[i].stock = Math.max(0, productos[i].stock - 1);
+        render();
+      });
+    });
+  }
+
+  render();
+</script>
+</body>
+</html>

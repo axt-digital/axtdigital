@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Demo: ficha de cliente — A x T Digital</title>
+<style>
+  :root {
+    --color-fondo:#0f1117; --color-superficie:#1a1d27; --color-borde:#2a2d3e;
+    --color-acento:#6c63ff; --color-acento-hover:#8b84ff; --color-texto:#e8e9f0;
+    --color-texto-suave:#9a9bb0; --color-ok:#22c55e; --color-no:#f87171;
+    --fuente-base:'Segoe UI', system-ui, -apple-system, sans-serif; --radio:12px;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--color-fondo);color:var(--color-texto);font-family:var(--fuente-base);line-height:1.6;}
+  .contenedor{width:min(92%,900px);margin-inline:auto;}
+  .nav{position:sticky;top:0;z-index:100;background:rgba(15,17,23,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--color-borde);padding:1rem 0;}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;width:min(92%,900px);margin-inline:auto;}
+  .nav-logo{font-size:1.1rem;font-weight:700;color:var(--color-acento);text-decoration:none;letter-spacing:-.5px;}
+  .nav-volver{font-size:.85rem;font-weight:600;color:var(--color-texto-suave);text-decoration:none;border:1px solid var(--color-borde);padding:.4rem 1rem;border-radius:99px;transition:border-color .2s,color .2s;}
+  .nav-volver:hover{color:var(--color-texto);border-color:var(--color-acento);}
+  main{padding:3rem 0 5rem;}
+  .chip{display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--color-acento);background:rgba(108,99,255,.12);border:1px solid rgba(108,99,255,.3);border-radius:99px;padding:.25rem .85rem;margin-bottom:1.25rem;}
+  h1{font-size:clamp(1.6rem,4vw,2.3rem);font-weight:800;line-height:1.25;letter-spacing:-.5px;margin-bottom:1rem;}
+  .rubro{color:var(--color-texto-suave);margin-bottom:2rem;max-width:62ch;}
+  .rubro b{color:var(--color-texto);}
+  .frase-estado{border-radius:var(--radio);padding:1rem 1.25rem;font-size:.95rem;font-weight:600;margin-bottom:1.5rem;display:flex;align-items:center;gap:.6rem;transition:opacity .3s;}
+  .frase-antes{background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.3);color:#ffb4b4;}
+  .frase-despues{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);color:#a7f3c9;opacity:.35;}
+  .frase-despues.activa{opacity:1;}
+  .buscador{margin-bottom:1.5rem;}
+  .buscador label{display:block;font-size:.78rem;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:var(--color-texto-suave);margin-bottom:.5rem;}
+  .chips{display:flex;gap:.6rem;flex-wrap:wrap;}
+  .chip-cliente{background:var(--color-superficie);border:1px solid var(--color-borde);color:var(--color-texto);font-size:.85rem;font-weight:600;padding:.5rem 1rem;border-radius:99px;cursor:pointer;transition:border-color .2s;}
+  .chip-cliente:hover{border-color:var(--color-acento);}
+  .chip-cliente.activo{border-color:var(--color-acento);background:rgba(108,99,255,.12);color:var(--color-acento);}
+  .ficha{background:var(--color-superficie);border:1px solid var(--color-borde);border-radius:var(--radio);padding:1.5rem;display:none;}
+  .ficha.mostrar{display:block;animation:aparecer .4s ease;}
+  @keyframes aparecer{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:translateY(0);}}
+  .ficha .nombre{font-size:1.2rem;font-weight:800;margin-bottom:.2rem;}
+  .ficha .dato{font-size:.82rem;color:var(--color-texto-suave);margin-bottom:1rem;}
+  .ficha h4{font-size:.75rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--color-acento);margin:1rem 0 .6rem;}
+  .ficha ul{list-style:none;}
+  .ficha li{font-size:.86rem;padding:.5rem 0;border-bottom:1px dashed var(--color-borde);}
+  .ficha li:last-child{border-bottom:none;}
+  .ficha .fecha{color:var(--color-texto-suave);font-size:.75rem;}
+  .proximo{background:var(--color-fondo);border:1px solid rgba(34,197,94,.3);border-radius:9px;padding:.7rem .9rem;font-size:.85rem;color:var(--color-ok);margin-top:.5rem;}
+  .vacio{color:var(--color-texto-suave);font-size:.85rem;font-style:italic;opacity:.6;}
+  .btn-primario{display:inline-block;background:var(--color-acento);color:#fff;font-weight:700;font-size:1rem;text-decoration:none;padding:.9rem 2rem;border-radius:99px;border:none;cursor:pointer;transition:background .2s,transform .15s;box-shadow:0 4px 20px rgba(108,99,255,.35);}
+  .btn-primario:hover{background:var(--color-acento-hover);transform:translateY(-2px);}
+  .cierre{margin-top:2.5rem;text-align:center;padding-top:2.5rem;border-top:1px solid var(--color-borde);}
+  .cierre p{color:var(--color-texto-suave);margin-bottom:1.25rem;}
+</style>
+</head>
+<body>
+  <nav class="nav"><div class="nav-inner">
+    <a href="index.html#heroe" class="nav-logo">A x T Digital</a>
+    <a href="index.html#ejemplos" class="nav-volver">← Volver al sitio</a>
+  </div></nav>
+
+  <main><div class="contenedor">
+    <span class="chip">Demo interactiva</span>
+    <h1>Ficha de cliente: buscás un nombre y tenés todo el historial a mano</h1>
+    <p class="rubro">Ejemplo armado con datos de <b>un estudio de abogacía</b> — sirve para cualquier profesional que necesite recordar rápido con quién habló y qué falta hacer.</p>
+
+    <div class="frase-estado frase-antes">✗ Antes: para saber en qué quedó un cliente hay que buscar en carpetas, cuadernos o mensajes viejos.</div>
+
+    <div class="buscador">
+      <label>Buscar cliente</label>
+      <div class="chips" id="chips"></div>
+    </div>
+
+    <div class="ficha" id="ficha"></div>
+
+    <div class="frase-estado frase-despues" id="fraseDespues" style="margin-top:1.5rem;">✓ Después: buscás el nombre y en un segundo tenés el historial completo y el próximo paso.</div>
+
+    <div class="cierre">
+      <p>¿Lo ves claro?</p>
+      <a href="index.html#agenda" class="btn-primario">Agendá 20 minutos y te armo la versión para tu negocio →</a>
+    </div>
+  </div></main>
+
+<script>
+  var clientes = [
+    {
+      nombre: "Rosa Martínez", dato: "Causa: sucesión — cliente desde marzo 2025",
+      historial: [
+        { texto: "Presentación inicial de la sucesión", fecha: "12 mar 2025" },
+        { texto: "Entrega de documentación del inmueble", fecha: "28 abr 2025" },
+        { texto: "Llamado de seguimiento, sin novedades del juzgado", fecha: "15 ago 2026" }
+      ],
+      proximo: "Próximo turno: martes 8 de sept, 10:00 hs"
+    },
+    {
+      nombre: "Diego Fernández", dato: "Causa: divorcio express — cliente desde julio 2026",
+      historial: [
+        { texto: "Consulta inicial y firma de poder", fecha: "3 jul 2026" },
+        { texto: "Presentación del escrito de divorcio", fecha: "22 jul 2026" }
+      ],
+      proximo: "Próximo turno: sin agendar — pendiente de llamar"
+    },
+    {
+      nombre: "Comercial Andina SRL", dato: "Asesoría laboral — cliente desde 2023",
+      historial: [
+        { texto: "Revisión de contrato de un nuevo empleado", fecha: "10 jun 2026" },
+        { texto: "Consulta por liquidación final", fecha: "2 ago 2026" },
+        { texto: "Envío de modelo de reglamento interno", fecha: "20 ago 2026" }
+      ],
+      proximo: "Próximo turno: jueves 4 de sept, 17:30 hs"
+    }
+  ];
+
+  var chips = document.getElementById("chips");
+  var ficha = document.getElementById("ficha");
+  var fraseDespues = document.getElementById("fraseDespues");
+
+  clientes.forEach(function (c, i) {
+    var chip = document.createElement("button");
+    chip.className = "chip-cliente";
+    chip.textContent = c.nombre;
+    chip.addEventListener("click", function () { mostrar(i, chip); });
+    chips.appendChild(chip);
+  });
+
+  function mostrar(i, chipEl) {
+    document.querySelectorAll(".chip-cliente").forEach(function (c) { c.classList.remove("activo"); });
+    chipEl.classList.add("activo");
+
+    var c = clientes[i];
+    var lis = c.historial.map(function (h) {
+      return '<li>' + h.texto + '<br><span class="fecha">' + h.fecha + '</span></li>';
+    }).join("");
+
+    ficha.innerHTML =
+      '<div class="nombre">' + c.nombre + '</div>' +
+      '<div class="dato">' + c.dato + '</div>' +
+      '<h4>Historial</h4>' +
+      '<ul>' + lis + '</ul>' +
+      '<div class="proximo">📅 ' + c.proximo + '</div>';
+    ficha.classList.add("mostrar");
+    fraseDespues.classList.add("activa");
+  }
+</script>
+</body>
+</html>

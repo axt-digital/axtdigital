@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Demo interactiva — A x T Digital</title>
+
+<style>
+  :root {
+    --color-fondo:        #0f1117;
+    --color-superficie:   #1a1d27;
+    --color-borde:        #2a2d3e;
+    --color-acento:       #6c63ff;
+    --color-acento-hover: #8b84ff;
+    --color-texto:        #e8e9f0;
+    --color-texto-suave:  #9a9bb0;
+    --color-ok:           #22c55e;
+    --color-no:           #f87171;
+    --fuente-base:        'Segoe UI', system-ui, -apple-system, sans-serif;
+    --radio:              12px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background-color: var(--color-fondo);
+    color: var(--color-texto);
+    font-family: var(--fuente-base);
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  .contenedor { width: min(92%, 900px); margin-inline: auto; }
+
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(15, 17, 23, 0.92);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--color-borde);
+    padding: 1rem 0;
+  }
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: min(92%, 900px);
+    margin-inline: auto;
+  }
+  .nav-logo { font-size: 1.1rem; font-weight: 700; color: var(--color-acento); text-decoration: none; letter-spacing: -0.5px; }
+  .nav-volver {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-texto-suave);
+    text-decoration: none;
+    border: 1px solid var(--color-borde);
+    padding: 0.4rem 1rem;
+    border-radius: 99px;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .nav-volver:hover { color: var(--color-texto); border-color: var(--color-acento); }
+
+  main { padding: 3rem 0 5rem; }
+
+  .chip {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--color-acento);
+    background: rgba(108, 99, 255, 0.12);
+    border: 1px solid rgba(108, 99, 255, 0.3);
+    border-radius: 99px;
+    padding: 0.25rem 0.85rem;
+    margin-bottom: 1.25rem;
+  }
+
+  h1 {
+    font-size: clamp(1.6rem, 4vw, 2.3rem);
+    font-weight: 800;
+    line-height: 1.25;
+    letter-spacing: -0.5px;
+    margin-bottom: 1rem;
+  }
+
+  .rubro { color: var(--color-texto-suave); margin-bottom: 2rem; max-width: 62ch; }
+  .rubro b { color: var(--color-texto); }
+
+  .frase-estado {
+    border-radius: var(--radio);
+    padding: 1rem 1.25rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    transition: opacity 0.3s;
+  }
+  .frase-antes { background: rgba(248, 113, 113, 0.1); border: 1px solid rgba(248, 113, 113, 0.3); color: #ffb4b4; }
+  .frase-despues {
+    background: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    color: #a7f3c9;
+    opacity: 0.35;
+  }
+  .frase-despues.activa { opacity: 1; }
+
+  .progreso {
+    font-size: 0.85rem;
+    color: var(--color-texto-suave);
+    margin-bottom: 1.5rem;
+  }
+  .progreso b { color: var(--color-acento); }
+  .barra {
+    height: 6px;
+    background: var(--color-superficie);
+    border: 1px solid var(--color-borde);
+    border-radius: 99px;
+    overflow: hidden;
+    margin-top: 0.5rem;
+  }
+  .barra-relleno {
+    height: 100%;
+    width: 0%;
+    background: var(--color-acento);
+    transition: width 0.4s ease;
+  }
+
+  .demo-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+  }
+  @media (max-width: 700px) {
+    .demo-grid { grid-template-columns: 1fr; }
+  }
+
+  .panel {
+    background: var(--color-superficie);
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radio);
+    padding: 1.25rem;
+  }
+  .panel-titulo {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .panel.antes .panel-titulo { color: var(--color-no); }
+  .panel.despues .panel-titulo { color: var(--color-ok); }
+
+  .msj {
+    background: var(--color-fondo);
+    border: 1px solid var(--color-borde);
+    border-radius: 10px;
+    padding: 0.8rem 0.9rem;
+    margin-bottom: 0.7rem;
+    transition: opacity 0.35s, transform 0.35s;
+  }
+  .msj:last-child { margin-bottom: 0; }
+  .msj.resuelto { opacity: 0.35; }
+
+  .msj-cabecera {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.35rem;
+  }
+  .msj-nombre { font-weight: 700; font-size: 0.85rem; }
+  .msj-hora { font-size: 0.72rem; color: var(--color-texto-suave); }
+  .msj-texto { font-size: 0.88rem; color: var(--color-texto-suave); margin-bottom: 0.6rem; }
+
+  .msj-boton {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #fff;
+    background: var(--color-acento);
+    border: none;
+    border-radius: 99px;
+    padding: 0.4rem 0.85rem;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .msj-boton:hover { background: var(--color-acento-hover); }
+  .msj-boton:disabled {
+    background: transparent;
+    border: 1px solid var(--color-borde);
+    color: var(--color-ok);
+    cursor: default;
+  }
+
+  .respuesta {
+    background: var(--color-fondo);
+    border: 1px solid var(--color-borde);
+    border-radius: 10px;
+    padding: 0.8rem 0.9rem;
+    margin-bottom: 0.7rem;
+    font-size: 0.88rem;
+    animation: aparecer 0.4s ease;
+  }
+  .respuesta:last-child { margin-bottom: 0; }
+  .respuesta .rap { font-size: 0.7rem; color: var(--color-ok); font-weight: 700; margin-bottom: 0.35rem; }
+  @keyframes aparecer {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .vacio {
+    color: var(--color-texto-suave);
+    font-size: 0.85rem;
+    font-style: italic;
+    opacity: 0.6;
+  }
+
+  .btn-primario {
+    display: inline-block;
+    background: var(--color-acento);
+    color: #fff;
+    font-weight: 700;
+    font-size: 1rem;
+    text-decoration: none;
+    padding: 0.9rem 2rem;
+    border-radius: 99px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    box-shadow: 0 4px 20px rgba(108, 99, 255, 0.35);
+  }
+  .btn-primario:hover { background: var(--color-acento-hover); transform: translateY(-2px); }
+
+  .cierre {
+    margin-top: 2.5rem;
+    text-align: center;
+    padding-top: 2.5rem;
+    border-top: 1px solid var(--color-borde);
+  }
+  .cierre p { color: var(--color-texto-suave); margin-bottom: 1.25rem; }
+</style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html#heroe" class="nav-logo">A x T Digital</a>
+      <a href="index.html#demo" class="nav-volver">← Volver al sitio</a>
+    </div>
+  </nav>
+
+  <main>
+    <div class="contenedor">
+
+      <span class="chip">Demo interactiva</span>
+      <h1>Así se ve una fiambrería antes y después de automatizar la atención por WhatsApp.</h1>
+      <p class="rubro">Ejemplo armado con datos de <b>una fiambrería</b> — la misma lógica se adapta a cualquier comercio o profesional que atienda consultas repetidas por mensaje.</p>
+
+      <div class="frase-estado frase-antes">
+        ✗ Antes: los clientes escriben y esperan horas (o días) por una respuesta, mientras vos estás atendiendo el mostrador.
+      </div>
+
+      <div class="progreso">
+        <span id="contador"><b>0</b> de 5</span> mensajes resueltos automáticamente. Hacé clic en "Responder automático" en cada uno.
+        <div class="barra"><div class="barra-relleno" id="barra"></div></div>
+      </div>
+
+      <div class="demo-grid">
+        <div class="panel antes">
+          <div class="panel-titulo">✗ Bandeja de WhatsApp — sin responder</div>
+          <div id="bandeja"></div>
+        </div>
+        <div class="panel despues">
+          <div class="panel-titulo">✓ Respuestas automáticas</div>
+          <div id="respuestas"><p class="vacio">Todavía no respondiste ningún mensaje. Probá el botón de la izquierda →</p></div>
+        </div>
+      </div>
+
+      <div class="frase-estado frase-despues" id="fraseDespues">
+        ✓ Después: cada consulta de horario, precio o stock se responde sola, al instante, aunque vos estés ocupada con un cliente.
+      </div>
+
+      <div class="cierre">
+        <p>¿Lo ves claro?</p>
+        <a href="index.html#agenda" class="btn-primario">Agendá 20 minutos y te armo la versión para tu negocio →</a>
+      </div>
+
+    </div>
+  </main>
+
+<script>
+  // Datos de ejemplo de una fiambrería. Sin servidor, sin API keys: todo corre acá, en el navegador.
+  var mensajes = [
+    {
+      nombre: "Marisa G.",
+      hora: "hace 3 h",
+      texto: "Hola, ¿tienen jamón crudo hoy?",
+      respuesta: "¡Hola Marisa! Sí, tenemos jamón crudo disponible. $8.200 el kilo 🧀"
+    },
+    {
+      nombre: "Ruben T.",
+      hora: "hace 1 día",
+      texto: "¿A qué hora abren mañana?",
+      respuesta: "¡Hola! Abrimos de lunes a sábado de 8 a 20 hs, y domingos de 9 a 13 hs."
+    },
+    {
+      nombre: "Cele",
+      hora: "hace 45 min",
+      texto: "Cuánto sale el kilo de queso cremoso?",
+      respuesta: "El queso cremoso está a $6.500 el kilo. ¿Te separo algo?"
+    },
+    {
+      nombre: "Fede A.",
+      hora: "hace 2 h",
+      texto: "Tienen stock de salame picado grueso?",
+      respuesta: "Sí, tenemos stock de salame picado grueso. $9.800 el kilo."
+    },
+    {
+      nombre: "Nadia",
+      hora: "hace 5 h",
+      texto: "Hacen envíos a domicilio?",
+      respuesta: "Sí, hacemos envíos en la zona. El pedido mínimo es $10.000."
+    }
+  ];
+
+  var bandeja = document.getElementById("bandeja");
+  var respuestas = document.getElementById("respuestas");
+  var contador = document.getElementById("contador");
+  var barra = document.getElementById("barra");
+  var fraseDespues = document.getElementById("fraseDespues");
+  var resueltos = 0;
+
+  mensajes.forEach(function (m, i) {
+    var card = document.createElement("div");
+    card.className = "msj";
+    card.id = "msj-" + i;
+    card.innerHTML =
+      '<div class="msj-cabecera">' +
+        '<span class="msj-nombre">' + m.nombre + '</span>' +
+        '<span class="msj-hora">' + m.hora + '</span>' +
+      '</div>' +
+      '<div class="msj-texto">"' + m.texto + '"</div>' +
+      '<button class="msj-boton" id="btn-' + i + '">Responder automático ⚡</button>';
+    bandeja.appendChild(card);
+
+    document.getElementById("btn-" + i).addEventListener("click", function () {
+      responder(i, m);
+    });
+  });
+
+  function responder(i, m) {
+    var card = document.getElementById("msj-" + i);
+    var boton = document.getElementById("btn-" + i);
+    if (boton.disabled) return;
+
+    boton.disabled = true;
+    boton.textContent = "✓ Resuelto";
+    card.classList.add("resuelto");
+
+    if (resueltos === 0) {
+      respuestas.innerHTML = "";
+    }
+
+    var r = document.createElement("div");
+    r.className = "respuesta";
+    r.innerHTML = '<div class="rap">⚡ Respondido en 1 segundo</div>' + m.respuesta;
+    respuestas.appendChild(r);
+
+    resueltos++;
+    contador.innerHTML = "<b>" + resueltos + "</b> de 5";
+    barra.style.width = (resueltos / mensajes.length * 100) + "%";
+
+    if (resueltos === mensajes.length) {
+      fraseDespues.classList.add("activa");
+    }
+  }
+</script>
+
+</body>
+</html>

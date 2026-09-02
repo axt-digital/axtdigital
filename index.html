@@ -323,6 +323,86 @@
       opacity: 0.4;
     }
 
+    a.demo-pantalla {
+      border-style: solid;
+      transition: border-color 0.2s, background 0.2s, transform 0.15s;
+    }
+    a.demo-pantalla span:last-child {
+      color: var(--color-acento);
+      font-weight: 700;
+    }
+    a.demo-pantalla:hover {
+      border-color: var(--color-acento);
+      background: rgba(108, 99, 255, 0.08);
+      transform: translateY(-2px);
+    }
+
+    /* ══════════════════════════════════════════════
+       4·B EJEMPLOS – Índice de demos
+       ══════════════════════════════════════════════ */
+    .ejemplos-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      margin-top: 2rem;
+    }
+
+    @media (max-width: 640px) {
+      .ejemplos-grid { grid-template-columns: 1fr; }
+    }
+
+    .ejemplo-card {
+      display: flex;
+      flex-direction: column;
+      background: var(--color-superficie);
+      border: 1px solid var(--color-borde);
+      border-radius: var(--radio);
+      padding: 1.5rem;
+      text-decoration: none;
+      color: var(--color-texto);
+      transition: border-color 0.2s, background 0.2s, transform 0.15s;
+    }
+
+    .ejemplo-card:hover {
+      border-color: var(--color-acento);
+      background: rgba(108, 99, 255, 0.06);
+      transform: translateY(-3px);
+    }
+
+    .ejemplo-emoji {
+      font-size: 1.6rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .ejemplo-rubro {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: var(--color-texto-suave);
+      margin-bottom: 0.5rem;
+    }
+
+    .ejemplo-card h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      line-height: 1.35;
+      margin-bottom: 0.5rem;
+    }
+
+    .ejemplo-card p {
+      font-size: 0.85rem;
+      color: var(--color-texto-suave);
+      margin-bottom: 1rem;
+      flex-grow: 1;
+    }
+
+    .ejemplo-ver {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--color-acento);
+    }
+
     /* ══════════════════════════════════════════════
        4. CÓMO TRABAJO – Pasos
        ══════════════════════════════════════════════ */
@@ -550,7 +630,7 @@
       <div class="heroe-parrafos">
         <p class="parrafo">
           Somos <strong>A x T Digital</strong> y ayudamos a pequeños y medianos negocios y
-          profesionales independientes a ganar más tiempo y más plata, con sistemas simples
+          profesionales independientes a ganar más tiempo y más dinero, con sistemas simples
           hechos a tu medida.
         </p>
         <p class="parrafo">
@@ -640,11 +720,11 @@
         </div>
       </div>
 
-      <!-- Caja vacía: acá irá la demo visual real -->
-      <div class="demo-pantalla" role="img" aria-label="Espacio reservado para la demo visual">
-        <span class="demo-pantalla-icono">🖥️</span>
-        <span>Demo interactiva — próximamente</span>
-      </div>
+      <!-- Demo interactiva real -->
+      <a href="demo.html" class="demo-pantalla" style="text-decoration:none; cursor:pointer;">
+        <span class="demo-pantalla-icono">💬</span>
+        <span>Probar la demo interactiva →</span>
+      </a>
 
     </div>
   </section>
@@ -660,7 +740,7 @@
       <h2 class="titulo-seccion" id="titulo-pasos">Así trabajamos juntos</h2>
 
       <p class="parrafo">
-        Primero recorremos tu negocio y vemos dónde se pierde más tiempo o plata;
+        Primero recorremos tu negocio y vemos dónde se pierde más tiempo o dinero;
         después te armamos la solución adaptada a cómo ya trabajás.
       </p>
       <p class="parrafo">
@@ -709,6 +789,91 @@
             <p>Revisamos con vos los resultados y ajustamos lo que haga falta. No desaparecemos al terminar.</p>
           </div>
         </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ════════════════════════════════════════════
+       4·B EJEMPLOS – Índice de demos realizadas
+       ════════════════════════════════════════════ -->
+  <section id="ejemplos" aria-labelledby="titulo-ejemplos">
+    <div class="contenedor animar">
+
+      <div class="chip">Ejemplos de trabajos realizados</div>
+      <h2 class="titulo-seccion" id="titulo-ejemplos">Elegí el que se parece a tu problema y probalo vos mismo/a.</h2>
+      <p class="parrafo">
+        Cada una de estas es una mini-demo real, armada con datos de ejemplo de un rubro
+        distinto. Hacé clic en la que más se acerca a tu negocio para ver cómo se sentiría
+        trabajar con nosotros.
+      </p>
+
+      <div class="ejemplos-grid">
+
+        <a href="demo.html" class="ejemplo-card">
+          <span class="ejemplo-emoji">💬</span>
+          <span class="ejemplo-rubro">Ejemplo: fiambrería</span>
+          <h3>WhatsApp que responde solo: horarios, precios y stock al instante</h3>
+          <p>Convertí una bandeja caótica de mensajes en respuestas automáticas.</p>
+          <span class="ejemplo-ver">Ver demo →</span>
+        </a>
+
+        <a href="demo-presupuesto.html" class="ejemplo-card">
+          <span class="ejemplo-emoji">🧾</span>
+          <span class="ejemplo-rubro">Ejemplo: taller mecánico</span>
+          <h3>Presupuestador automático: 4 datos y un precio al instante</h3>
+          <p>El cliente completa un formulario simple y recibe el presupuesto sin llamar.</p>
+          <span class="ejemplo-ver">Ver demo →</span>
+        </a>
+
+        <a href="demo-agenda.html" class="ejemplo-card">
+          <span class="ejemplo-emoji">📅</span>
+          <span class="ejemplo-rubro">Ejemplo: consultorio</span>
+          <h3>Turnos ordenados con recordatorio automático</h3>
+          <p>Se acabaron los turnos anotados a mano, superpuestos o ilegibles.</p>
+          <span class="ejemplo-ver">Ver demo →</span>
+        </a>
+
+        <a href="demo-catalogo.html" class="ejemplo-card">
+          <span class="ejemplo-emoji">🛍️</span>
+          <span class="ejemplo-rubro">Ejemplo: boutique</span>
+          <h3>Catálogo con pedido armado: el mensaje de WhatsApp se escribe solo</h3>
+          <p>El cliente elige productos y el pedido queda redactado, listo para copiar.</p>
+          <span class="ejemplo-ver">Ver demo →</span>
+        </a>
+
+        <a href="demo-consultas.html" class="ejemplo-card">
+          <span class="ejemplo-emoji">🗂️</span>
+          <span class="ejemplo-rubro">Ejemplo: asociación</span>
+          <h3>Panel de consultas: nada se pierde, todo tiene un estado claro</h3>
+          <p>Cada mensaje avanza de "nuevo" a "cerrado" sin mezclarse con los demás.</p>
+          <span class="ejemplo-ver">Ver demo →</span>
+        </a>
+
+        <a href="demo-ficha.html" class="ejemplo-card">
+          <span class="ejemplo-emoji">👤</span>
+          <span class="ejemplo-rubro">Ejemplo: estudio de abogacía</span>
+          <h3>Ficha de cliente: buscás un nombre y tenés todo el historial a mano</h3>
+          <p>Historial y próximo turno de cada cliente, a un clic de distancia.</p>
+          <span class="ejemplo-ver">Ver demo →</span>
+        </a>
+
+        <a href="demo-stock.html" class="ejemplo-card">
+          <span class="ejemplo-emoji">📦</span>
+          <span class="ejemplo-rubro">Ejemplo: kiosco</span>
+          <h3>Control de stock con alerta cuando algo se está por terminar</h3>
+          <p>Sumá y restá stock, y mirá cómo se activa la alerta de mínimo.</p>
+          <span class="ejemplo-ver">Ver demo →</span>
+        </a>
+
+        <a href="demo-textos.html" class="ejemplo-card">
+          <span class="ejemplo-emoji">✍️</span>
+          <span class="ejemplo-rubro">Ejemplo: boutique</span>
+          <h3>Generador de textos: en el tono de tu negocio, listos en segundos</h3>
+          <p>Story, descripción de producto o mail — el texto ya armado, para copiar.</p>
+          <span class="ejemplo-ver">Ver demo →</span>
+        </a>
 
       </div>
     </div>
