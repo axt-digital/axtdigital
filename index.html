@@ -40,11 +40,20 @@
       font-family: var(--fuente-base);
       font-size: 1rem;
       line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    img, svg { max-width: 100%; }
+
+    /* Evita que las secciones queden tapadas por el nav sticky
+       al saltar con los links internos (#ejemplos, #agenda, etc.) */
+    section[id] {
+      scroll-margin-top: 84px;
     }
 
     /* ── Contenedor central ──────────────────────── */
     .contenedor {
-      width: min(90%, 780px);
+      width: min(92%, 780px);
       margin-inline: auto;
     }
 
@@ -63,7 +72,8 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      width: min(90%, 780px);
+      gap: 0.75rem;
+      width: min(92%, 780px);
       margin-inline: auto;
     }
 
@@ -537,7 +547,7 @@
     }
 
     .faq-item.abierto .faq-respuesta {
-      max-height: 300px;
+      max-height: 480px;
     }
 
     .faq-item.abierto .faq-icono {
@@ -596,6 +606,80 @@
     .animar.visible {
       opacity: 1;
       transform: translateY(0);
+    }
+
+    /* ══════════════════════════════════════════════
+       AJUSTES DE PULIDO – celular y pantallas chicas
+       (no cambia textos ni lógica, solo espaciado/tamaños)
+       ══════════════════════════════════════════════ */
+    @media (max-width: 640px) {
+      section {
+        padding: 3rem 0;
+      }
+
+      #heroe {
+        padding-top: 3.5rem;
+        padding-bottom: 2.5rem;
+      }
+
+      #agenda {
+        padding: 3.5rem 0;
+      }
+
+      .nav {
+        padding: 0.85rem 0;
+      }
+
+      .nav-logo {
+        font-size: 1rem;
+      }
+
+      .nav-cta {
+        font-size: 0.75rem;
+        padding: 0.35rem 0.8rem;
+        white-space: nowrap;
+      }
+
+      .titulo-seccion {
+        margin-bottom: 1.1rem;
+      }
+
+      .presupuesto-caja,
+      .demo-pantalla {
+        padding: 1.5rem 1.25rem;
+      }
+
+      .paso {
+        padding: 1.1rem;
+        gap: 1rem;
+      }
+
+      .tarjeta,
+      .demo-card,
+      .ejemplo-card {
+        padding: 1.25rem;
+      }
+
+      .btn-primario {
+        width: 100%;
+        text-align: center;
+        padding: 0.9rem 1.25rem;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .heroe-titulo {
+        letter-spacing: -0.5px;
+      }
+
+      .faq-pregunta {
+        padding: 1rem 1.1rem;
+        font-size: 0.9rem;
+      }
+
+      .faq-respuesta p {
+        padding: 0 1.1rem 1.1rem;
+      }
     }
   </style>
 </head>
