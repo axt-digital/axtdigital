@@ -38,9 +38,14 @@
   .panel.antes .panel-titulo{color:var(--color-no);}
   .panel.despues .panel-titulo{color:var(--color-ok);}
   .nota{background:var(--color-fondo);border:1px dashed var(--color-borde);border-radius:10px;padding:.8rem .9rem;margin-bottom:.7rem;font-size:.86rem;color:var(--color-texto-suave);transition:opacity .35s;}
-  .nota.resuelta{opacity:.3;text-decoration:line-through;}
+  .nota.resuelta .nota-cuerpo{opacity:.3;text-decoration:line-through;}
+  .nota .turno{margin-top:.6rem;text-decoration:none;}
   .nota-boton{margin-top:.5rem;font-size:.72rem;font-weight:700;color:#fff;background:var(--color-acento);border:none;border-radius:99px;padding:.35rem .8rem;cursor:pointer;}
   .nota-boton:disabled{background:transparent;border:1px solid var(--color-borde);color:var(--color-ok);cursor:default;}
+  /* En celular la respuesta (el turno ya ordenado) aparece pegada a la
+     nota original, así que la columna de la derecha con todos los turnos
+     juntos no hace falta y se oculta. */
+  @media(max-width:700px){.panel.despues{display:none;}}
   .turno{background:var(--color-fondo);border:1px solid var(--color-borde);border-radius:10px;padding:.7rem .9rem;margin-bottom:.6rem;font-size:.86rem;animation:aparecer .4s ease;}
   .turno .hora{font-weight:700;color:var(--color-acento);}
   .turno .paciente{color:var(--color-texto);margin:.2rem 0;}
@@ -106,7 +111,7 @@
     var nota = document.createElement("div");
     nota.className = "nota";
     nota.id = "nota-" + i;
-    nota.innerHTML = p.texto + '<br><button class="nota-boton" id="btn-' + i + '">Ordenar y avisar ⚡</button>';
+    nota.innerHTML = '<div class="nota-cuerpo">' + p.texto + '<br><button class="nota-boton" id="btn-' + i + '">Ordenar y avisar ⚡</button></div>';
     notas.appendChild(nota);
     document.getElementById("btn-" + i).addEventListener("click", function () { ordenar(i, p); });
   });
@@ -119,12 +124,18 @@
     boton.textContent = "✓ Ordenado";
     nota.classList.add("resuelta");
 
-    if (resueltos === 0) turnos.innerHTML = "";
-
     var t = document.createElement("div");
     t.className = "turno";
     t.innerHTML = '<div class="hora">' + p.hora + '</div><div class="paciente">' + p.paciente + '</div><div class="rec">✓ Recordatorio enviado por WhatsApp 24hs antes</div>';
-    turnos.appendChild(t);
+
+    var esMobile = window.matchMedia("(max-width: 700px)").matches;
+    if (esMobile) {
+      // En celular: el turno ya ordenado queda pegado a la nota original.
+      nota.appendChild(t);
+    } else {
+      if (resueltos === 0) turnos.innerHTML = "";
+      turnos.appendChild(t);
+    }
 
     resueltos++;
     contador.innerHTML = "<b>" + resueltos + "</b> de " + pendientes.length;

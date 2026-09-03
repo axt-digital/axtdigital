@@ -36,7 +36,10 @@
   .columna.nuevo h3{color:var(--color-no);}
   .columna.proceso h3{color:var(--color-medio);}
   .columna.cerrado h3{color:var(--color-ok);}
-  .tarjeta{background:var(--color-fondo);border:1px solid var(--color-borde);border-radius:9px;padding:.7rem .8rem;margin-bottom:.6rem;font-size:.83rem;transition:opacity .3s,transform .3s;}
+  .tarjeta{background:var(--color-fondo);border:1px solid var(--color-borde);border-radius:9px;padding:.7rem .8rem;margin-bottom:.6rem;font-size:.83rem;transition:opacity .3s,transform .3s,box-shadow .3s,border-color .3s;}
+  /* En celular resalta un instante la tarjeta que se acaba de mover de
+     columna, para que se note el cambio sin tener que buscarlo. */
+  .tarjeta.recien-movida{border-color:var(--color-acento);box-shadow:0 0 0 2px rgba(108,99,255,.35);}
   .tarjeta .nom{font-weight:700;margin-bottom:.15rem;}
   .tarjeta .msj{color:var(--color-texto-suave);font-size:.8rem;margin-bottom:.5rem;}
   .tarjeta button{font-size:.7rem;font-weight:700;color:#fff;background:var(--color-acento);border:none;border-radius:99px;padding:.3rem .7rem;cursor:pointer;}
@@ -98,6 +101,7 @@
       items.forEach(function (c) {
         var t = document.createElement("div");
         t.className = "tarjeta";
+        t.setAttribute("data-consulta", c.id);
         var boton = "";
         if (estado === "nuevo") boton = '<button data-id="' + c.id + '">Pasar a "en proceso" →</button>';
         if (estado === "proceso") boton = '<button data-id="' + c.id + '">Marcar como cerrado ✓</button>';
@@ -122,6 +126,20 @@
     if (c.estado === "nuevo") c.estado = "proceso";
     else if (c.estado === "proceso") c.estado = "cerrado";
     render();
+
+    // En celular las tres columnas quedan apiladas, así que la tarjeta
+    // que se acaba de mover puede quedar lejos de donde tocaste. La
+    // llevamos a la vista y la resaltamos un instante.
+    var esMobile = window.matchMedia("(max-width: 700px)").matches;
+    if (esMobile) {
+      var el = document.querySelector('.tarjeta[data-consulta="' + id + '"]');
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "center" });
+        el.classList.add("recien-movida");
+        setTimeout(function () { el.classList.remove("recien-movida"); }, 1200);
+      }
+    }
+
     if (!yaAvanzo) {
       yaAvanzo = true;
       document.getElementById("fraseDespues").classList.add("activa");
