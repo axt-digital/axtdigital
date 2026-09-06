@@ -101,6 +101,37 @@
       color: #fff;
     }
 
+    /* ── Encabezado de marca (logo + nombre + slogan) ── */
+    .encabezado-marca {
+      text-align: center;
+      padding: 2.5rem 1rem 2rem;
+    }
+
+    .encabezado-marca img {
+      max-width: 180px;
+      width: 100%;
+      height: auto;
+      margin-bottom: 1rem;
+    }
+
+    .encabezado-marca .marca-nombre {
+      font-size: clamp(1.6rem, 4.5vw, 2.4rem);
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      color: var(--color-texto);
+      margin-bottom: 0.4rem;
+    }
+
+    .encabezado-marca .marca-nombre span {
+      color: var(--color-acento);
+    }
+
+    .encabezado-marca .marca-slogan {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--color-texto-suave);
+    }
+
     /* ── Secciones generales ─────────────────────── */
     section {
       padding: 5rem 0;
@@ -685,6 +716,15 @@
 </head>
 
 <body>
+
+  <!-- ════════════════════════════════════════════
+       ENCABEZADO DE MARCA – Logo + nombre + slogan
+       ════════════════════════════════════════════ -->
+  <header class="encabezado-marca">
+    <img src="assets/logo-axt-digital.png" alt="Logo de A x T Digital" />
+    <div class="marca-nombre"><span>A x T</span> Digital</div>
+    <p class="marca-slogan">Sistemas simples para tu negocio</p>
+  </header>
 
   <!-- ════════════════════════════════════════════
        BARRA DE NAVEGACIÓN
